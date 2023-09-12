@@ -2,9 +2,6 @@ package com.example.sosgeolocator;
 
 
 import static android.content.Context.LOCATION_SERVICE;
-
-import static androidx.core.content.ContextCompat.startActivity;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -40,17 +37,17 @@ public class GPSManager {
                 // Acción a realizar cuando la ubicación cambia
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
-                double latitudObtenida = 0,longitudObtenida = 0;
+                double latitudObtenida = 0, longitudObtenida = 0;
 
                 MainActivity mainActivity = (MainActivity) context;
 
                 TextView tvDisplay = mainActivity.findViewById(R.id.display);
                 TextView tvGrid = mainActivity.findViewById(R.id.grid);
-                TextView tvPosicion =mainActivity.findViewById(R.id.posicion);
+                TextView tvPosicion = mainActivity.findViewById(R.id.posicion);
 
-                String miGrid ="";
+                String miGrid = "";
 
-                int precision_minima=100;
+                int precision_minima = 100;
                 int precision = (int) location.getAccuracy();
 
                 if (primerPaso) {
@@ -60,12 +57,12 @@ public class GPSManager {
                     if (precision < precision_minima) {
                         tvDisplay.setText(mainActivity.getString(R.string.latitud) + latitude + "\n" + mainActivity.getString(R.string.longitud) + longitude + mainActivity.getString(R.string.precision) + precision);
                         Toast.makeText(mContext, R.string.datos_gps_correctos, Toast.LENGTH_LONG).show();
-                        miGrid=CalcularGrid.grid(latitude, longitude);
+                        miGrid = CalcularGrid.grid(latitude, longitude);
 
                         tvGrid.setText("" + miGrid);
-                        latitudObtenida=CalcularCoordenadasDesdeGrid.latitud(miGrid);
-                        longitudObtenida=CalcularCoordenadasDesdeGrid.longitud(miGrid);
-                        tvPosicion.setText(("Latitud: "+latitudObtenida+"\nLonguitud: "+longitudObtenida));
+                        latitudObtenida = CalcularCoordenadasDesdeGrid.latitud(miGrid);
+                        longitudObtenida = CalcularCoordenadasDesdeGrid.longitud(miGrid);
+                        tvPosicion.setText((mainActivity.getString(R.string.latitud) + latitudObtenida + "\n" + mainActivity.getString(R.string.longitud)+ longitudObtenida));
 
                     } else {
                         Toast.makeText(mContext, "Señal GPS muy debil.", Toast.LENGTH_SHORT).show();
@@ -80,8 +77,8 @@ public class GPSManager {
                 tvPosicion.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        abrirURL(v,"https://www.openstreetmap.org/?mlat="+finalLatitudObtenida+"&mlon="+ finalLongitudObtenida);
-                        abrirURL(v,"https://www.openstreetmap.org/?mlat="+finalLatitudObtenida+"&mlon="+ finalLongitudObtenida);
+                        abrirURL(v, "https://www.openstreetmap.org/?mlat=" + finalLatitudObtenida + "&mlon=" + finalLongitudObtenida);
+                        abrirURL(v, "https://www.openstreetmap.org/?mlat=" + finalLatitudObtenida + "&mlon=" + finalLongitudObtenida);
 
                     }
                 });
@@ -89,7 +86,7 @@ public class GPSManager {
                 tvGrid.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        abrirURL(v,"https://k7fry.com/grid/?qth="+ finalMiGrid);
+                        abrirURL(v, "https://k7fry.com/grid/?qth=" + finalMiGrid);
                     }
                 });
             }
@@ -111,7 +108,6 @@ public class GPSManager {
                 // Acción a realizar cuando el proveedor de ubicación se deshabilita
                 Toast.makeText(context, R.string.GPS_desactivado, Toast.LENGTH_LONG).show();
             }
-
 
 
         };
@@ -137,13 +133,12 @@ public class GPSManager {
         return null;
     }
 
-    public void abrirURL(View v,String url) {
+    public void abrirURL(View v, String url) {
         MainActivity mainActivity = (MainActivity) mContext;
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
         mainActivity.startActivity(intent);
     }
-
 
 
 }
