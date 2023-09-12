@@ -8,6 +8,6 @@
     <string name="no_permisos_GPS">NO TIENE PERMISOS GPS</string>
     <string name="precision_mala">La precisión del GPS es muy mala.\nPor favor, busque un sitio mas despejado.</string>
     <string name="precision">"\nPrecisión: "</string>
-    <string name="datos_gps_correctos">Datos GPS correctos</string>
-    <integer name="precision_minima">100</integer>
+    <string name="datos_gps_correctos">Señal GPS correcta</string>
+
 </resources>
