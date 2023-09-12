@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">SOS GeoLocator</string>
+    <string name="latitud">"Latitud: "</string>
+    <string name="longitud">"Longitud: "</string>
+    <string name="buscando_GPS">Buscando señal GPS.....</string>
+    <string name="GPS_desactivado">El GPS está desactivado.</string>
+    <string name="se_necesitan_permisos">SE NECESITAN PERMISOS DE GPS.\n\nActive el permiso de GPS\ny\nvuelva a iniciar la aplicación.</string>
+    <string name="no_permisos_GPS">NO TIENE PERMISOS GPS</string>
+    <string name="precision_mala">La precisión del GPS es muy mala.\nPor favor, busque un sitio mas despejado.</string>
+    <string name="precision">"\nPrecisión: "</string>
+    <string name="datos_gps_correctos">Datos GPS correctos</string>
+    <integer name="precision_minima">100</integer>
 </resources>
