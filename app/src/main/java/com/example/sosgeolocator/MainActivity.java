@@ -14,10 +14,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        TextView miDisplay = findViewById(R.id.display);
+
+        TextView tvMensajes = findViewById(R.id.tvMensajes);
 
 
-        miDisplay.setText(R.string.buscando_GPS);
+        tvMensajes.setText(R.string.buscando_GPS);
 
         GPSManager mGPSManager = new GPSManager(this);
         mGPSManager.getCurrentLocation();
