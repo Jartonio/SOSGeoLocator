@@ -41,40 +41,62 @@ public class GPSManager {
 
                 MainActivity mainActivity = (MainActivity) context;
 
-                TextView tvDisplay = mainActivity.findViewById(R.id.display);
-                TextView tvGrid = mainActivity.findViewById(R.id.grid);
-                TextView tvPosicion = mainActivity.findViewById(R.id.posicion);
+                TextView tvMensajes = mainActivity.findViewById(R.id.tvMensajes);
+                TextView tvGridLocator = mainActivity.findViewById(R.id.tvGridLocator);
+                TextView tvLatitudGPS = mainActivity.findViewById((R.id.tvLatitudGPS));
+                TextView tvLongitudGPS = mainActivity.findViewById((R.id.tvLongitudGPS));
+                TextView tvLatitudGRID = mainActivity.findViewById(R.id.tvLatitudGrid);
+                TextView tvLongitudGRID = mainActivity.findViewById(R.id.tvLongitudGrid);
+                TextView tvVerMapaGrid = mainActivity.findViewById(R.id.tvVerMapaGrid);
+                TextView tvVerMapaCoordenadas = mainActivity.findViewById(R.id.tvVerMapaCordenadas);
+                TextView tvPrecision = mainActivity.findViewById(R.id.tvPrecision);
 
-                String miGrid = "";
+                String miGridLocator = "";
 
                 int precision_minima = 100;
                 int precision = (int) location.getAccuracy();
 
                 if (primerPaso) {
                     primerPaso = false;
-                    tvDisplay.setText(R.string.buscando_GPS);
+                    tvMensajes.setText(R.string.buscando_GPS);
                 } else {
                     if (precision < precision_minima) {
-                        tvDisplay.setText(mainActivity.getString(R.string.latitud) + latitude + "\n" + mainActivity.getString(R.string.longitud) + longitude + mainActivity.getString(R.string.precision) + precision);
-                        Toast.makeText(mContext, R.string.datos_gps_correctos, Toast.LENGTH_LONG).show();
-                        miGrid = CalcularGrid.grid(latitude, longitude);
 
-                        tvGrid.setText("" + miGrid);
-                        latitudObtenida = CalcularCoordenadasDesdeGrid.latitud(miGrid);
-                        longitudObtenida = CalcularCoordenadasDesdeGrid.longitud(miGrid);
-                        tvPosicion.setText((mainActivity.getString(R.string.latitud) + latitudObtenida + "\n" + mainActivity.getString(R.string.longitud)+ longitudObtenida));
+
+                        tvLatitudGPS.setText(Double.toString(latitude));
+
+                        tvLatitudGPS.setText(String.format("%.6f", latitude).replace(',','.'));
+                        tvLongitudGPS.setText(String.format("%.6f", longitude).replace(',','.'));
+                        tvPrecision.setText(Integer.toString(precision));
+
+
+                        Toast.makeText(mContext, R.string.datos_gps_correctos, Toast.LENGTH_LONG).show();
+
+                        miGridLocator = CalcularGrid.grid(latitude, longitude);
+
+                        tvGridLocator.setText(miGridLocator);
+
+                        latitudObtenida = CalcularCoordenadasDesdeGrid.latitud(miGridLocator);
+                        longitudObtenida = CalcularCoordenadasDesdeGrid.longitud(miGridLocator);
+
+                        tvLatitudGRID.setText(String.format("%.6f", latitudObtenida).replace(',','.'));
+                        tvLongitudGRID.setText(String.format("%.6f", longitudObtenida).replace(',','.'));
+
+
 
                     } else {
                         Toast.makeText(mContext, "Señal GPS muy debil.", Toast.LENGTH_SHORT).show();
-                        tvDisplay.setText(R.string.precision_mala);
-                        tvGrid.setText("");
-                        tvPosicion.setText("");
+                        tvMensajes.setText(R.string.precision_mala);
+                        tvGridLocator.setText("");
+                        tvLatitudGRID.setText("");
+                        tvLongitudGRID.setText("");
+
                     }
                 }
 
                 double finalLatitudObtenida = latitudObtenida;
                 double finalLongitudObtenida = longitudObtenida;
-                tvPosicion.setOnClickListener(new View.OnClickListener() {
+                tvVerMapaCoordenadas.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         abrirURL(v, "https://www.openstreetmap.org/?mlat=" + finalLatitudObtenida + "&mlon=" + finalLongitudObtenida);
@@ -82,8 +104,8 @@ public class GPSManager {
 
                     }
                 });
-                String finalMiGrid = miGrid;
-                tvGrid.setOnClickListener(new View.OnClickListener() {
+                String finalMiGrid = miGridLocator;
+                tvVerMapaGrid.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         abrirURL(v, "https://k7fry.com/grid/?qth=" + finalMiGrid);
@@ -125,8 +147,8 @@ public class GPSManager {
             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, mLocationListener);
         } else {
             MainActivity mainActivity = (MainActivity) this.mContext;
-            TextView miDisplay = mainActivity.findViewById(R.id.display);
-            miDisplay.setText(R.string.se_necesitan_permisos);
+            TextView tvMensajes = mainActivity.findViewById(R.id.tvMensajes);
+            tvMensajes.setText(R.string.se_necesitan_permisos);
             Toast.makeText(mContext, R.string.no_permisos_GPS, Toast.LENGTH_LONG).show();
         }
         //return location;
@@ -139,6 +161,7 @@ public class GPSManager {
         intent.setData(Uri.parse(url));
         mainActivity.startActivity(intent);
     }
+
 
 
 }

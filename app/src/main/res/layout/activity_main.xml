@@ -7,35 +7,124 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/display"
+        android:id="@+id/tvMensajes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="clip_horizontal|center"
+        android:text="MENSAJES"
         android:textAlignment="center"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.26" />
+        app:layout_constraintVertical_bias="0.063" />
 
     <TextView
-        android:id="@+id/grid"
+        android:id="@+id/tvGridLocator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="AA00AA00AA"
         android:textAlignment="center"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/display"
-        app:layout_constraintVertical_bias="0.24000001" />
+        app:layout_constraintTop_toBottomOf="@+id/tvMensajes"
+        app:layout_constraintVertical_bias="0.41" />
 
     <TextView
-        android:id="@+id/posicion"
+        android:id="@+id/tvLatitudGPS"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="00.000000"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/tvGridLocator"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvMensajes"
+        app:layout_constraintVertical_bias="0.344" />
+
+    <TextView
+        android:id="@+id/tvLongitudGPS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00.000000"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/tvGridLocator"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvLatitudGPS"
+        app:layout_constraintVertical_bias="0.161" />
+
+    <TextView
+        android:id="@+id/tvLatitudGrid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="00.000000"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/grid"
-        app:layout_constraintVertical_bias="0.32999998" />
+        app:layout_constraintTop_toBottomOf="@+id/tvGridLocator"
+        app:layout_constraintVertical_bias="0.245" />
+
+    <TextView
+        android:id="@+id/tvLongitudGrid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00.000000"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvLatitudGrid"
+        app:layout_constraintVertical_bias="0.179" />
+
+    <TextView
+        android:id="@+id/tvVerMapaCordenadas"
+        android:layout_width="59dp"
+        android:layout_height="56dp"
+        android:layout_marginEnd="16dp"
+        android:background="@android:drawable/editbox_background"
+        android:gravity="center"
+        android:text="VER"
+        android:textAlignment="inherit"
+        app:layout_constraintBottom_toBottomOf="@+id/tvLongitudGrid"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/tvLatitudGrid"
+        app:layout_constraintTop_toTopOf="@+id/tvLatitudGrid"
+        app:layout_constraintVertical_bias="0.545" />
+
+    <TextView
+        android:id="@+id/tvVerMapaGrid"
+        android:layout_width="70dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="16dp"
+        android:background="@android:drawable/editbox_background"
+        android:gravity="center"
+        android:text="VER"
+        app:layout_constraintBottom_toBottomOf="@+id/tvGridLocator"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/tvGridLocator"
+        app:layout_constraintTop_toTopOf="@+id/tvGridLocator"
+        app:layout_constraintVertical_bias="0.439" />
+
+    <TextView
+        android:id="@+id/tvPrecision"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="000"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvLongitudGPS"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.848"
+        app:layout_constraintStart_toEndOf="@+id/tvLongitudGPS"
+        app:layout_constraintTop_toTopOf="@+id/tvLatitudGPS"
+        app:layout_constraintVertical_bias="0.547" />
 </androidx.constraintlayout.widget.ConstraintLayout>
