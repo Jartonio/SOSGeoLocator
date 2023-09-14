@@ -3,6 +3,7 @@ package com.example.sosgeolocator;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
         GPSManager mGPSManager = new GPSManager(this);
         mGPSManager.getCurrentLocation();
 
-
     }
 
     @Override
@@ -31,4 +31,6 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         Toast.makeText(this, "He vuelto", Toast.LENGTH_SHORT).show();
     }
+
+
 }
