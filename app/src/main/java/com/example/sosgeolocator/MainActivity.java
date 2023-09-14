@@ -29,6 +29,5 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Toast.makeText(this, "He vuelto", Toast.LENGTH_SHORT).show();
-
     }
 }
