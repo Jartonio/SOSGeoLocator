@@ -2,6 +2,7 @@ package com.example.sosgeolocator;
 
 
 import static android.content.Context.LOCATION_SERVICE;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +25,7 @@ public class GPSManager {
     private final Context mContext;
     private final LocationManager mLocationManager;
     private final LocationListener mLocationListener;
-    private Boolean primerPaso = true;
+
 
     public GPSManager(Context context) {
         mContext = context;
@@ -56,43 +57,31 @@ public class GPSManager {
                 int precision_minima = 100;
                 int precision = (int) location.getAccuracy();
 
-                if (primerPaso) {
-                    primerPaso = false;
-                    tvMensajes.setText(R.string.buscando_GPS);
+                if (precision < precision_minima) {
+
+
+                    tvLatitudGPS.setText(Double.toString(latitude));
+
+                    tvLatitudGPS.setText(String.format("%.6f", latitude).replace(',', '.'));
+                    tvLongitudGPS.setText(String.format("%.6f", longitude).replace(',', '.'));
+                    tvPrecision.setText(Integer.toString(precision));
+                    tvMensajes.setText(R.string.datos_gps_correctos);
+
+                    miGridLocator = CalcularGrid.grid(latitude, longitude);
+                    tvGridLocator.setText(miGridLocator);
+
+                    latitudObtenida = CalcularCoordenadasDesdeGrid.latitud(miGridLocator);
+                    longitudObtenida = CalcularCoordenadasDesdeGrid.longitud(miGridLocator);
+
+                    tvLatitudGRID.setText(String.format("%.6f", latitudObtenida).replace(',', '.'));
+                    tvLongitudGRID.setText(String.format("%.6f", longitudObtenida).replace(',', '.'));
                 } else {
-                    if (precision < precision_minima) {
-
-
-                        tvLatitudGPS.setText(Double.toString(latitude));
-
-                        tvLatitudGPS.setText(String.format("%.6f", latitude).replace(',','.'));
-                        tvLongitudGPS.setText(String.format("%.6f", longitude).replace(',','.'));
-                        tvPrecision.setText(Integer.toString(precision));
-
-
-                        Toast.makeText(mContext, R.string.datos_gps_correctos, Toast.LENGTH_LONG).show();
-
-                        miGridLocator = CalcularGrid.grid(latitude, longitude);
-
-                        tvGridLocator.setText(miGridLocator);
-
-                        latitudObtenida = CalcularCoordenadasDesdeGrid.latitud(miGridLocator);
-                        longitudObtenida = CalcularCoordenadasDesdeGrid.longitud(miGridLocator);
-
-                        tvLatitudGRID.setText(String.format("%.6f", latitudObtenida).replace(',','.'));
-                        tvLongitudGRID.setText(String.format("%.6f", longitudObtenida).replace(',','.'));
-
-
-
-                    } else {
-                        Toast.makeText(mContext, "Señal GPS muy debil.", Toast.LENGTH_SHORT).show();
-                        tvMensajes.setText(R.string.precision_mala);
-                        tvGridLocator.setText("");
-                        tvLatitudGRID.setText("");
-                        tvLongitudGRID.setText("");
-
-                    }
+                    tvMensajes.setText(R.string.precision_mala);
+                    tvGridLocator.setText("");
+                    tvLatitudGRID.setText("");
+                    tvLongitudGRID.setText("");
                 }
+
 
                 double finalLatitudObtenida = latitudObtenida;
                 double finalLongitudObtenida = longitudObtenida;
@@ -101,7 +90,6 @@ public class GPSManager {
                     public void onClick(View v) {
                         abrirURL(v, "https://www.openstreetmap.org/?mlat=" + finalLatitudObtenida + "&mlon=" + finalLongitudObtenida);
                         abrirURL(v, "https://www.openstreetmap.org/?mlat=" + finalLatitudObtenida + "&mlon=" + finalLongitudObtenida);
-
                     }
                 });
                 String finalMiGrid = miGridLocator;
@@ -130,8 +118,6 @@ public class GPSManager {
                 // Acción a realizar cuando el proveedor de ubicación se deshabilita
                 Toast.makeText(context, R.string.GPS_desactivado, Toast.LENGTH_LONG).show();
             }
-
-
         };
     }
 
@@ -149,7 +135,6 @@ public class GPSManager {
             MainActivity mainActivity = (MainActivity) this.mContext;
             TextView tvMensajes = mainActivity.findViewById(R.id.tvMensajes);
             tvMensajes.setText(R.string.se_necesitan_permisos);
-            Toast.makeText(mContext, R.string.no_permisos_GPS, Toast.LENGTH_LONG).show();
         }
         //return location;
         return null;
@@ -161,7 +146,6 @@ public class GPSManager {
         intent.setData(Uri.parse(url));
         mainActivity.startActivity(intent);
     }
-
 
 
 }
