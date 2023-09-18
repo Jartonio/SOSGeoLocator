@@ -100,7 +100,6 @@ public class GPSManager {
                     }
                 });
             }
-
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
                 // Acción a realizar cuando cambia el estado del proveedor de ubicación
