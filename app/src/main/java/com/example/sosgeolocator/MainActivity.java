@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         miGPS = new MiGPS(this);
-        miGPS.startLocationUpdates();
 
         TextView tvGripLocator = findViewById(R.id.tvGridLocator);
         tvGripLocator.setOnClickListener(new View.OnClickListener() {
@@ -42,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        // Detener las actualizaciones de ubicación cuando la actividad se detenga
         miGPS.stopLocationUpdates();
     }
 
