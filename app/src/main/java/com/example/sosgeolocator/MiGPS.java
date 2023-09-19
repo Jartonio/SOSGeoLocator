@@ -10,12 +10,12 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 public class MiGPS extends CalcularGrid implements LocationListener {
 
@@ -29,15 +29,32 @@ public class MiGPS extends CalcularGrid implements LocationListener {
     public MiGPS(Context context) {
         this.mContext = context;
         mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-    }
 
-    public void startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions((Activity) mContext, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            //return;
+        MainActivity mainActivity = (MainActivity) this.mContext;
+
+        TextView tvMensajes = mainActivity.findViewById(R.id.tvMensajes);
+        tvMensajes.setText(R.string.buscando_GPS);
+
+        if (ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity) mContext, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+        }
+        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(mContext, "Permiso concedido", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(mContext, "Permiso no concedido", Toast.LENGTH_SHORT).show();
         }
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
     }
+
+    public void startLocationUpdates() {
+
+        mLocationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        }
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
+    }
+
 
     public void stopLocationUpdates() {
         mLocationManager.removeUpdates(this);
