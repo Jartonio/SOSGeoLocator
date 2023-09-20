@@ -2,15 +2,19 @@ package com.example.sosgeolocator;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -44,10 +48,14 @@ public class MainActivity extends AppCompatActivity {
         miGPS.stopLocationUpdates();
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
-        miGPS.startLocationUpdates();
+
+        if (miGPS.primerpaso || miGPS.permisoGPS) {
+            miGPS.startLocationUpdates();
+        }
     }
 }
 

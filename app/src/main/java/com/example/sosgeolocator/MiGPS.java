@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -25,6 +26,9 @@ public class MiGPS extends CalcularGrid implements LocationListener {
     private double longitudGPS, latitudGPS, longitudGrid, latitudGrid;
     private String mGridLocator = "";
     private final int precision_minima = 100;
+    public Boolean permisoGPS = false;
+    public Boolean primerpaso = true;
+
 
     public MiGPS(Context context) {
         mContext = context;
@@ -36,20 +40,31 @@ public class MiGPS extends CalcularGrid implements LocationListener {
         TextView tvMensajes = mainActivity.findViewById(R.id.tvMensajes);
         tvMensajes.setText(R.string.buscando_GPS);
 
-        startLocationUpdates();
+        //startLocationUpdates(); Lo quito porque se carga en el onResume.
     }
+
     public void startLocationUpdates() {
+
+        primerpaso = false;
 
 
         if (ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions((Activity) mContext, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
+
+
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(mContext, "Permiso concedido", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(mContext, "Permiso concedido", Toast.LENGTH_SHORT).show();
+            permisoGPS = true;
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
         } else {
-            Toast.makeText(mContext, "Permiso no concedido", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(mContext, "Permiso no concedido", Toast.LENGTH_SHORT).show();
+            permisoGPS = false;
+            MainActivity mainActivity = (MainActivity) this.mContext;
+
+            TextView tvMensajes = mainActivity.findViewById(R.id.tvMensajes);
+            tvMensajes.setText("No ha concedido permiso de GPS.\nConceda el permiso y reinicie la aplacacion");
         }
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
     }
 
 
@@ -76,13 +91,12 @@ public class MiGPS extends CalcularGrid implements LocationListener {
         TextView tvPrecision = mainActivity.findViewById(R.id.tvPrecision);
 
         if (location.hasAccuracy()) {
-            //Toast.makeText(mainActivity, "GPS fijado", Toast.LENGTH_SHORT).show();
-        }
-        else {
+            Toast.makeText(mainActivity, "GPS fijado", Toast.LENGTH_SHORT).show();
+        } else {
             Toast.makeText(mainActivity, "GPS no fijado", Toast.LENGTH_SHORT).show();
         }
 
-            int precision = (int) location.getAccuracy();
+        int precision = (int) location.getAccuracy();
         long timeSinceLastUpdate = System.currentTimeMillis() - location.getTime();
 
         if (timeSinceLastUpdate > 4000) {
@@ -90,17 +104,14 @@ public class MiGPS extends CalcularGrid implements LocationListener {
             // lo que podría indicar una pérdida de señal
             // o que el GPS no está proporcionando actualizaciones con la frecuencia esperada
             Toast.makeText(mainActivity, "Exceso de tiempo sin señal", Toast.LENGTH_SHORT).show();
-
         }
-        Log.d("mili", "onLocationChanged: "+Long.toString(timeSinceLastUpdate));
-        Log.d("mili", "precision: "+precision);
 
 
+        if (location == null) {
+            Toast.makeText(mainActivity, "GPS nulo", Toast.LENGTH_SHORT).show();
+        }
 
-        if (location==null){
-        Toast.makeText(mainActivity, "GPS nulo", Toast.LENGTH_SHORT).show();
-    }
-location.reset();
+        //location.reset(); No se por que estaba..
 
         if (precision < precision_minima) {
 
