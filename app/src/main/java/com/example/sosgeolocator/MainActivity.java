@@ -8,6 +8,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -43,6 +44,21 @@ public class MainActivity extends AppCompatActivity {
                 ClipData clip = ClipData.newPlainText("text", tvGripLocator.getText().toString());
                 clipboard.setPrimaryClip(clip);
                 Toast.makeText(getApplicationContext(), "Grid Locator copiado al portapapeles", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        TextView tvVerMapaCoordenadas=findViewById(R.id.tvVerMapaCordenadas);
+        tvVerMapaCoordenadas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                abrirURL("https://www.openstreetmap.org/?mlat=" + miGPS.getLatitudGrid() + "&mlon=" + miGPS.getLongitudGrid());
+            }
+        });
+        TextView tvVerMapaGrid=findViewById(R.id.tvVerMapaGrid);
+        tvVerMapaGrid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                abrirURL("https://k7fry.com/grid/?qth=" + miGPS.getmGridLocator());
             }
         });
     }
@@ -104,6 +120,11 @@ public class MainActivity extends AppCompatActivity {
         Log.d("pepe", "pausado");
 
 */
+    private void abrirURL(String url) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        this.startActivity(intent);
+    }
 
 }
 
