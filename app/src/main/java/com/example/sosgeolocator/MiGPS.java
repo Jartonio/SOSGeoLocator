@@ -61,8 +61,8 @@ public class MiGPS extends CalcularGrid implements LocationListener {
         TextView tvGridLocator = mainActivity.findViewById(R.id.tvGridLocator);
         TextView tvLatitudGPS = mainActivity.findViewById((R.id.tvLatitudGPS));
         TextView tvLongitudGPS = mainActivity.findViewById((R.id.tvLongitudGPS));
-        TextView tvLatitudGRID = mainActivity.findViewById(R.id.tvLatitudGrid);
-        TextView tvLongitudGRID = mainActivity.findViewById(R.id.tvLongitudGrid);
+        TextView tvLatitudGrid = mainActivity.findViewById(R.id.tvLatitudGrid);
+        TextView tvLongitudGrid = mainActivity.findViewById(R.id.tvLongitudGrid);
         TextView tvVerMapaGrid = mainActivity.findViewById(R.id.tvVerMapaGrid);
         TextView tvVerMapaCoordenadas = mainActivity.findViewById(R.id.tvVerMapaCordenadas);
         TextView tvPrecision = mainActivity.findViewById(R.id.tvPrecision);
@@ -104,16 +104,16 @@ public class MiGPS extends CalcularGrid implements LocationListener {
             latitudGrid = CalcularCoordenadasDesdeGrid.latitud(mGridLocator);
             longitudGrid = CalcularCoordenadasDesdeGrid.longitud(mGridLocator);
 
-            tvLatitudGRID.setText(String.format("%.6f", latitudGrid).replace(',', '.'));
-            tvLongitudGRID.setText(String.format("%.6f", longitudGrid).replace(',', '.'));
+            tvLatitudGrid.setText(String.format("%.6f", latitudGrid).replace(',', '.'));
+            tvLongitudGrid.setText(String.format("%.6f", longitudGrid).replace(',', '.'));
 
         } else {
             tvMensajes.setText(R.string.precision_mala);
             tvLatitudGPS.setText("00.000000");
             tvLongitudGPS.setText("00.000000");
             tvGridLocator.setText("AA00AA00AA");
-            tvLatitudGRID.setText("00.000000");
-            tvLongitudGRID.setText("00.000000");
+            tvLatitudGrid.setText("00.000000");
+            tvLongitudGrid.setText("00.000000");
             tvPrecision.setText("000");
         }
 

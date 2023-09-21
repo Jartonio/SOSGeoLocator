@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         miGPS = new MiGPS(this);
+        Log.d("pepe", "oncreate");
+
 
         //Creo un listener en el GridLocator para copirlo al portapapeles.
         TextView tvGripLocator = findViewById(R.id.tvGridLocator);
@@ -92,6 +95,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /*
+    si activo esto no vuelve de ver los mapas de internet, pero lanza siempre el patrocinador
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("pepe", "pausado");
+
+*/
 
 }
+
 

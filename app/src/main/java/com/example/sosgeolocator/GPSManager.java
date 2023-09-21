@@ -44,10 +44,10 @@ public class GPSManager {
 
                 TextView tvMensajes = mainActivity.findViewById(R.id.tvMensajes);
                 TextView tvGridLocator = mainActivity.findViewById(R.id.tvGridLocator);
-                TextView tvLatitudGPS = mainActivity.findViewById((R.id.tvLatitudGPS));
+                TextView tvLatitudGPS = mainActivity.findViewById((R.id.tvLatitudGrid));
                 TextView tvLongitudGPS = mainActivity.findViewById((R.id.tvLongitudGPS));
                 TextView tvLatitudGRID = mainActivity.findViewById(R.id.tvLatitudGrid);
-                TextView tvLongitudGRID = mainActivity.findViewById(R.id.tvLongitudGrid);
+                TextView tvLongitudGRID = mainActivity.findViewById(R.id.tvLongitudGPS);
                 TextView tvVerMapaGrid = mainActivity.findViewById(R.id.tvVerMapaGrid);
                 TextView tvVerMapaCoordenadas = mainActivity.findViewById(R.id.tvVerMapaCordenadas);
                 TextView tvPrecision = mainActivity.findViewById(R.id.tvPrecision);

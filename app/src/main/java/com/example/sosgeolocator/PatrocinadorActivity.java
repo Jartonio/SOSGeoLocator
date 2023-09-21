@@ -13,10 +13,6 @@ public class PatrocinadorActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
-
         setContentView(R.layout.activity_patrocinador);
 
         new Handler().postDelayed(new Runnable() {
@@ -28,6 +24,8 @@ public class PatrocinadorActivity extends AppCompatActivity {
                 finish(); // Cierra la actividad actual para que no vuelva al presionar "Atrás"
                 Log.d("pepe", "run: ");
             }
-        }, 2000); // 2000 milisegundos = 5 segundos
+        }, 1000); // 2000 milisegundos = 5 segundos
+
     }
+
 }
