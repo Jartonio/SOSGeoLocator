@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     private MiGPS miGPS;
     private boolean permisoGPS = false;
-    private boolean primerpaso = true;
+    public boolean primerpaso = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
