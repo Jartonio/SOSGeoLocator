@@ -19,7 +19,7 @@ public class MiGPS extends CalcularGrid implements LocationListener {
     private Context mContext;
     private LocationManager mLocationManager;
     private double longitudGPS, latitudGPS, longitudGrid, latitudGrid;
-    private String mGridLocator = "";
+    private String gridLocator = "";
     private final int precision_minima = 100;
     private int precision,altitud;
 
@@ -128,8 +128,8 @@ public class MiGPS extends CalcularGrid implements LocationListener {
         return latitudGrid;
     }
 
-    public String getmGridLocator() {
-        return mGridLocator;
+    public String getGridLocator() {
+        return gridLocator;
     }
 
     private void abrirURL(String url) {
@@ -187,11 +187,11 @@ public class MiGPS extends CalcularGrid implements LocationListener {
         tvAltitud.setText(Integer.toString(altitud)+" m");
         tvMensajes.setText(R.string.datos_gps_correctos);
 
-        mGridLocator = CalcularGrid.grid(latitudGPS, longitudGPS);
-        tvGridLocator.setText(mGridLocator);
+        gridLocator = CalcularGrid.grid(latitudGPS, longitudGPS);
+        tvGridLocator.setText(gridLocator);
 
-        latitudGrid = CalcularCoordenadasDesdeGrid.latitud(mGridLocator);
-        longitudGrid = CalcularCoordenadasDesdeGrid.longitud(mGridLocator);
+        latitudGrid = CalcularCoordenadasDesdeGrid.latitud(gridLocator);
+        longitudGrid = CalcularCoordenadasDesdeGrid.longitud(gridLocator);
 
         tvLatitudGrid.setText(String.format("%.6f", latitudGrid).replace(',', '.'));
         tvLongitudGrid.setText(String.format("%.6f", longitudGrid).replace(',', '.'));

@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         tvVerMapaGrid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                abrirURL("https://k7fry.com/grid/?qth=" + miGPS.getmGridLocator());
+                abrirURL("https://k7fry.com/grid/?qth=" + miGPS.getGridLocator());
             }
         });
     }
