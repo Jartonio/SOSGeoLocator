@@ -1,7 +1,6 @@
 package com.example.sosgeolocator;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,14 +9,10 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 public class MiGPS extends CalcularGrid implements LocationListener {
 
@@ -26,14 +21,12 @@ public class MiGPS extends CalcularGrid implements LocationListener {
     private double longitudGPS, latitudGPS, longitudGrid, latitudGrid;
     private String mGridLocator = "";
     private final int precision_minima = 100;
-    public Boolean permisoGPS = false;
     public Boolean primerpaso = true;
 
 
     public MiGPS(Context context) {
         mContext = context;
         mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-
 
         MainActivity mainActivity = (MainActivity) this.mContext;
 
@@ -46,25 +39,9 @@ public class MiGPS extends CalcularGrid implements LocationListener {
     public void startLocationUpdates() {
 
         primerpaso = false;
-
-
-        if (ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions((Activity) mContext, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         }
-
-
-        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            //Toast.makeText(mContext, "Permiso concedido", Toast.LENGTH_SHORT).show();
-            permisoGPS = true;
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
-        } else {
-            // Toast.makeText(mContext, "Permiso no concedido", Toast.LENGTH_SHORT).show();
-            permisoGPS = false;
-            MainActivity mainActivity = (MainActivity) this.mContext;
-
-            TextView tvMensajes = mainActivity.findViewById(R.id.tvMensajes);
-            tvMensajes.setText("No ha concedido permiso de GPS.\nConceda el permiso y reinicie la aplacacion");
-        }
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
     }
 
 
@@ -106,12 +83,12 @@ public class MiGPS extends CalcularGrid implements LocationListener {
             Toast.makeText(mainActivity, "Exceso de tiempo sin señal", Toast.LENGTH_SHORT).show();
         }
 
-
+         /*
         if (location == null) {
             Toast.makeText(mainActivity, "GPS nulo", Toast.LENGTH_SHORT).show();
         }
-
         //location.reset(); No se por que estaba..
+          */
 
         if (precision < precision_minima) {
 
