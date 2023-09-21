@@ -21,8 +21,10 @@ public class MiGPS extends CalcularGrid implements LocationListener {
     private double longitudGPS, latitudGPS, longitudGrid, latitudGrid;
     private String mGridLocator = "";
     private final int precision_minima = 100;
-    private int precision;
-    public Boolean primerpaso = true;
+    private int precision,altitud;
+
+    private boolean fix=false;
+    //public Boolean primerpaso = true;
 
 
     public MiGPS(Context context) {
@@ -32,14 +34,14 @@ public class MiGPS extends CalcularGrid implements LocationListener {
         MainActivity mainActivity = (MainActivity) this.mContext;
 
         TextView tvMensajes = mainActivity.findViewById(R.id.tvMensajes);
+
         tvMensajes.setText(R.string.buscando_GPS);
 
-        //startLocationUpdates(); Lo quito porque se carga en el onResume.
     }
 
     public void startLocationUpdates() {
 
-        primerpaso = false;
+        //primerpaso = false;
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         }
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
@@ -58,17 +60,17 @@ public class MiGPS extends CalcularGrid implements LocationListener {
 
         MainActivity mainActivity = (MainActivity) mContext;
         TextView tvMensajes = mainActivity.findViewById(R.id.tvMensajes);
-        TextView tvVerMapaGrid = mainActivity.findViewById(R.id.tvVerMapaGrid);
-        TextView tvVerMapaCoordenadas = mainActivity.findViewById(R.id.tvVerMapaCordenadas);
+
 
 
         if (location.hasAccuracy()) {
-           // Toast.makeText(mainActivity, "GPS fijado", Toast.LENGTH_SHORT).show();
+            fix=true;
         } else {
-            //Toast.makeText(mainActivity, "GPS no fijado", Toast.LENGTH_SHORT).show();
+            fix=false;
         }
 
         precision = (int) location.getAccuracy();
+        altitud=(int) location.getAltitude();
 
         long timeSinceLastUpdate = System.currentTimeMillis() - location.getTime();
 
@@ -78,7 +80,6 @@ public class MiGPS extends CalcularGrid implements LocationListener {
             // o que el GPS no está proporcionando actualizaciones con la frecuencia esperada
             Toast.makeText(mainActivity, "Exceso de tiempo sin señal", Toast.LENGTH_SHORT).show();
         }
-
 
 
         if (precision < precision_minima) {
@@ -147,6 +148,8 @@ public class MiGPS extends CalcularGrid implements LocationListener {
         TextView tvLatitudGrid = mainActivity.findViewById(R.id.tvLatitudGrid);
         TextView tvLongitudGrid = mainActivity.findViewById(R.id.tvLongitudGrid);
         TextView tvPrecision = mainActivity.findViewById(R.id.tvPrecision);
+        TextView tvAltitud = mainActivity.findViewById(R.id.tvAltitud);
+        TextView tvFix = mainActivity.findViewById(R.id.tvFix);
         tvMensajes.setText(R.string.precision_mala);
         tvLatitudGPS.setText("00.000000");
         tvLongitudGPS.setText("00.000000");
@@ -154,6 +157,8 @@ public class MiGPS extends CalcularGrid implements LocationListener {
         tvLatitudGrid.setText("00.000000");
         tvLongitudGrid.setText("00.000000");
         tvPrecision.setText("000");
+        tvAltitud.setText(("--- m"));
+        tvFix.setText("No Fix");
     }
 
     private void rellenarCampos(MainActivity mainActivity){
@@ -165,11 +170,21 @@ public class MiGPS extends CalcularGrid implements LocationListener {
         TextView tvLatitudGrid = mainActivity.findViewById(R.id.tvLatitudGrid);
         TextView tvLongitudGrid = mainActivity.findViewById(R.id.tvLongitudGrid);
         TextView tvPrecision = mainActivity.findViewById(R.id.tvPrecision);
+        TextView tvAltitud = mainActivity.findViewById(R.id.tvAltitud);
+        TextView tvFix =mainActivity.findViewById(R.id.tvFix);
+
+        if (fix){
+            tvFix.setText("Si FiX");
+        }else{
+            tvFix.setText("No Fix");
+
+        }
 
         tvLatitudGPS.setText(Double.toString(latitudGPS));
         tvLatitudGPS.setText(String.format("%.6f", latitudGPS).replace(',', '.'));
         tvLongitudGPS.setText(String.format("%.6f", longitudGPS).replace(',', '.'));
         tvPrecision.setText(Integer.toString(precision));
+        tvAltitud.setText(Integer.toString(altitud)+" m");
         tvMensajes.setText(R.string.datos_gps_correctos);
 
         mGridLocator = CalcularGrid.grid(latitudGPS, longitudGPS);

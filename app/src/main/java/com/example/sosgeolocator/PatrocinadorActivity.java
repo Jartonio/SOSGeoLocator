@@ -22,7 +22,6 @@ public class PatrocinadorActivity extends AppCompatActivity {
                 Intent intent = new Intent(PatrocinadorActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish(); // Cierra la actividad actual para que no vuelva al presionar "Atrás"
-                Log.d("pepe", "run: ");
             }
         }, 1000); // 2000 milisegundos = 5 segundos
 

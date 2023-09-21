@@ -74,6 +74,15 @@
                     android:text="00.000000"
                     android:textColor="@color/white"
                     android:textSize="34sp" />
+
+                <TextView
+                    android:id="@+id/tvAltitud"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:text="0 m"
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -81,7 +90,17 @@
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvFix"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:gravity="center"
+                    android:text="No Fix"
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
 
                 <TextView
                     android:id="@+id/tvPrecision"
