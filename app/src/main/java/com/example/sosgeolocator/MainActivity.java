@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+
     //Este método comprueba cada segundo si tengo permisos de GPS y lo pasa a la variable 'permisoGPS'
     CountDownTimer countDownTimer = new CountDownTimer(Long.MAX_VALUE, 1000) {
         @Override

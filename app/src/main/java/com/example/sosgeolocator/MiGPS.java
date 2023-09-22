@@ -9,10 +9,13 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 public class MiGPS extends CalcularGrid implements LocationListener {
 
@@ -20,12 +23,15 @@ public class MiGPS extends CalcularGrid implements LocationListener {
     private LocationManager mLocationManager;
     private double longitudGPS, latitudGPS, longitudGrid, latitudGrid;
     private String gridLocator = "";
-    private final int precision_minima = 100;
+    private final int precision_minima = 10000;
     private int precision,altitud;
 
-    private boolean fix=false;
-    //public Boolean primerpaso = true;
+    private long ultimoTimeGPS;
 
+    private boolean fix=false;
+
+    //public Boolean primerpaso = true;
+    private ComprobarFIX fixGPS= new ComprobarFIX();
 
     public MiGPS(Context context) {
         mContext = context;
@@ -37,6 +43,8 @@ public class MiGPS extends CalcularGrid implements LocationListener {
 
         tvMensajes.setText(R.string.buscando_GPS);
 
+
+
     }
 
     public void startLocationUpdates() {
@@ -45,6 +53,7 @@ public class MiGPS extends CalcularGrid implements LocationListener {
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         }
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
+
     }
 
 
@@ -62,6 +71,11 @@ public class MiGPS extends CalcularGrid implements LocationListener {
         TextView tvMensajes = mainActivity.findViewById(R.id.tvMensajes);
 
 
+        Log.d("PEPE", "onLocationChanged: ");
+
+
+        fixGPS.setmLocation(location);
+
 
         if (location.hasAccuracy()) {
             fix=true;
@@ -72,17 +86,24 @@ public class MiGPS extends CalcularGrid implements LocationListener {
         precision = (int) location.getAccuracy();
         altitud=(int) location.getAltitude();
 
-        long timeSinceLastUpdate = System.currentTimeMillis() - location.getTime();
+        long timeSinceLastUpdate = location.getTime()-ultimoTimeGPS;
 
         if (timeSinceLastUpdate > 4000) {
             // Ha pasado mucho tiempo desde la última actualización,
             // lo que podría indicar una pérdida de señal
             // o que el GPS no está proporcionando actualizaciones con la frecuencia esperada
             Toast.makeText(mainActivity, "Exceso de tiempo sin señal", Toast.LENGTH_SHORT).show();
+        }else{
+            //Log.d("PEPE", "TIME correcto: "+ultimoTimeGPS+" - "+location.getTime()+"= "+timeSinceLastUpdate);
         }
 
 
-        if (precision < precision_minima) {
+        ultimoTimeGPS=location.getTime();
+
+
+
+
+        if (precision <= precision_minima) {
             //Si la precisón es buena, actualizo los campos de la pantalla.
             rellenarCampos(mainActivity);
 
@@ -196,4 +217,7 @@ public class MiGPS extends CalcularGrid implements LocationListener {
         tvLatitudGrid.setText(String.format("%.6f", latitudGrid).replace(',', '.'));
         tvLongitudGrid.setText(String.format("%.6f", longitudGrid).replace(',', '.'));
     }
+
+
+
 }
