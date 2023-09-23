@@ -17,6 +17,9 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import java.util.Calendar;
+import java.util.TimeZone;
+
 public class MiGPS extends CalcularGrid implements LocationListener {
 
     private Context mContext;
@@ -28,10 +31,13 @@ public class MiGPS extends CalcularGrid implements LocationListener {
 
     private long ultimoTimeGPS;
 
+
     private boolean fix=false;
 
     //public Boolean primerpaso = true;
-    private ComprobarFIX fixGPS= new ComprobarFIX();
+    private ComprobarFIX comprobarFixGPS= new ComprobarFIX();
+
+    private Location mLocation=null;
 
     public MiGPS(Context context) {
         mContext = context;
@@ -42,7 +48,7 @@ public class MiGPS extends CalcularGrid implements LocationListener {
         TextView tvMensajes = mainActivity.findViewById(R.id.tvMensajes);
 
         tvMensajes.setText(R.string.buscando_GPS);
-
+        mCountDownTimer.start();
 
 
     }
@@ -63,6 +69,8 @@ public class MiGPS extends CalcularGrid implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
+        mLocation=location;
+
 
         latitudGPS = location.getLatitude();
         longitudGPS = location.getLongitude();
@@ -71,10 +79,10 @@ public class MiGPS extends CalcularGrid implements LocationListener {
         TextView tvMensajes = mainActivity.findViewById(R.id.tvMensajes);
 
 
-        Log.d("PEPE", "onLocationChanged: ");
+        Log.d("PEPEPE", "onLocationChanged: ");
 
 
-        fixGPS.setmLocation(location);
+        comprobarFixGPS.setmLocation(location);
 
 
         if (location.hasAccuracy()) {
@@ -98,7 +106,7 @@ public class MiGPS extends CalcularGrid implements LocationListener {
         }
 
 
-        ultimoTimeGPS=location.getTime();
+        //ultimoTimeGPS=location.getTime();
 
 
 
@@ -160,6 +168,7 @@ public class MiGPS extends CalcularGrid implements LocationListener {
         mainActivity.startActivity(intent);
     }
 
+
     private void ponerAcerosLosCampos(MainActivity mainActivity ){
 
         TextView tvMensajes = mainActivity.findViewById(R.id.tvMensajes);
@@ -218,6 +227,54 @@ public class MiGPS extends CalcularGrid implements LocationListener {
         tvLongitudGrid.setText(String.format("%.6f", longitudGrid).replace(',', '.'));
     }
 
+    private void iconoGPS (MainActivity mm,boolean activar){
+        TextView tv=mm.findViewById(R.id.tvGPS);
+        if (activar){
+            tv.setText("GPS");
+        }else {
+            tv.setText("");
+        }
+    }
 
+    private CountDownTimer mCountDownTimer = new CountDownTimer(Long.MAX_VALUE, 1000) {
+        int intentos=0;
+        @Override
+        public void onTick(long millisUntilFinished) {
+            if (mLocation!=null) {
+                long tiempoLocation = mLocation.getTime();
+                Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                long utcTime = calendar.getTimeInMillis();
+                long tiempoUltimoGPS = ultimoTimeGPS - tiempoLocation;
+                if (ultimoTimeGPS != 0) {
+                    if ((Math.abs(tiempoUltimoGPS)) < 4000) {
+
+                        // mCountDownTimer.cancel();
+                        fix = true;
+                        intentos++;
+                    } else {
+                        fix = false;
+                        intentos--;
+                    }
+                }
+                Log.d("PEPEPE", "actual: " + tiempoLocation + " - " + ultimoTimeGPS + " - " + Math.abs(tiempoUltimoGPS) + " " + fix);
+                if (intentos>=4){
+                    intentos=4;
+                    Log.d("PEPEPE", "encender icono gps");
+                }
+                if (intentos<=0 && fix) {
+                    intentos=0;
+                    Log.d("PEPEPE", "apagar icono gps");
+                }
+                iconoGPS((MainActivity) mContext,fix);
+                ultimoTimeGPS = utcTime;
+            }
+        }
+
+        @Override
+        public void onFinish() {
+
+        }
+
+    };
 
 }

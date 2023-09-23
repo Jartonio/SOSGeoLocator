@@ -1,12 +1,9 @@
 package com.example.sosgeolocator;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
+
 import android.location.Location;
 import android.os.CountDownTimer;
 import android.util.Log;
-
-import androidx.core.content.ContextCompat;
 
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -26,28 +23,24 @@ public class ComprobarFIX {
 
     public void setmLocation(Location mLocation) {
         this.mLocation = mLocation;
+        //cargado location conrola que la clase se carge con el "Location" para que no de error
         cargadoLocation = true;
-
-
     }
 
     public boolean isFixGPS() {
         return fixGPS;
     }
 
-    CountDownTimer mCountDownTimer = new CountDownTimer(Long.MAX_VALUE, 1000) {
+    private CountDownTimer mCountDownTimer = new CountDownTimer(Long.MAX_VALUE, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
             if (cargadoLocation) {
-                long a = mLocation.getTime();
-                long pepe=0;
+                long tiempoLocation = mLocation.getTime();
                 Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                 long utcTime = calendar.getTimeInMillis();
-
-                long timeSinceLastUpdate = ultimoTimeGPS - a;
+                long tiempoUltimoGPS = ultimoTimeGPS - tiempoLocation;
                 if (ultimoTimeGPS != 0) {
-                    pepe = Math.abs(timeSinceLastUpdate);
-                    if (pepe < 4000) {
+                    if ((Math.abs(tiempoUltimoGPS)) < 4000) {
 
                         // mCountDownTimer.cancel();
                         fixGPS = true;
@@ -55,7 +48,7 @@ public class ComprobarFIX {
                         fixGPS = false;
                     }
                 }
-                Log.d("PEPE", "actual: " + a + " - " + ultimoTimeGPS + " - " + pepe+" "+  fixGPS);
+                Log.d("PEPE", "actual: " + tiempoLocation + " - " + ultimoTimeGPS + " - " + Math.abs(tiempoUltimoGPS) + " " + fixGPS);
 
                 ultimoTimeGPS = utcTime;
             }

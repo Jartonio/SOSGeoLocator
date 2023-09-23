@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                 permisoGPS = true;
                 countDownTimer.cancel();
             }
-            Log.d("tick", "onTick: " + permisoGPS);
+            Log.d("PEPEPE", "onTick: " + permisoGPS);
         }
 
         @Override
