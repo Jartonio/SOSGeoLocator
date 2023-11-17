@@ -24,19 +24,19 @@ public class MainActivity extends AppCompatActivity {
 
     private MiGPS miGPS;
     private boolean permisoGPS = false;
-    public boolean primerpaso = true;
+    private boolean primerpaso = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        miGPS = new MiGPS(this);
-        Log.d("pepe", "oncreate");
-
-
-        //Creo un listener en el GridLocator para copirlo al portapapeles.
         TextView tvGripLocator = findViewById(R.id.tvGridLocator);
+        TextView tvVerMapaCoordenadas=findViewById(R.id.tvVerMapaCordenadas);
+        TextView tvVerMapaGrid=findViewById(R.id.tvVerMapaGrid);
+
+
+
+        //Listener en el GridLocator para copirlo al portapapeles.
         tvGripLocator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,24 +46,25 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Grid Locator copiado al portapapeles", Toast.LENGTH_SHORT).show();
             }
         });
-
-        TextView tvVerMapaCoordenadas=findViewById(R.id.tvVerMapaCordenadas);
+        //Listener para ve las coordenadas Grig en el mapa
         tvVerMapaCoordenadas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 abrirURL("https://www.openstreetmap.org/?mlat=" + miGPS.getLatitudGrid() + "&mlon=" + miGPS.getLongitudGrid());
             }
         });
-        TextView tvVerMapaGrid=findViewById(R.id.tvVerMapaGrid);
+        //Listener para ver el Grid locator por internet
         tvVerMapaGrid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                abrirURL("https://k7fry.com/grid/?qth=" + miGPS.getmGridLocator());
+                abrirURL("https://k7fry.com/grid/?qth=" + miGPS.getGridLocator());
             }
         });
     }
 
-    //Este método lee cada segundo si tengo permisos de GPS y lo pasa a la variable 'permisoGPS'
+
+
+    //Este método comprueba cada segundo si tengo permisos de GPS y lo pasa a la variable 'permisoGPS'
     CountDownTimer countDownTimer = new CountDownTimer(Long.MAX_VALUE, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                 permisoGPS = true;
                 countDownTimer.cancel();
             }
-            Log.d("tick", "onTick: " + permisoGPS);
+            Log.d("PEPEPE", "onTick: " + permisoGPS);
         }
 
         @Override
@@ -85,12 +86,10 @@ public class MainActivity extends AppCompatActivity {
         miGPS.stopLocationUpdates();
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
         TextView tvMensajes = findViewById(R.id.tvMensajes);
-
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             permisoGPS = true;
@@ -103,10 +102,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        Log.d("tick", "onResume: " + ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION));
-
         if (permisoGPS) {
             tvMensajes.setText(R.string.buscando_GPS);
+            miGPS = new MiGPS(this);
             miGPS.startLocationUpdates();
         }
     }

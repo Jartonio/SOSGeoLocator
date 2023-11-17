@@ -9,21 +9,35 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import java.util.Calendar;
+import java.util.TimeZone;
 
 public class MiGPS extends CalcularGrid implements LocationListener {
 
     private Context mContext;
     private LocationManager mLocationManager;
     private double longitudGPS, latitudGPS, longitudGrid, latitudGrid;
-    private String mGridLocator = "";
-    private final int precision_minima = 100;
-    private int precision;
-    public Boolean primerpaso = true;
+    private String gridLocator = "";
+    private final int precision_minima = 10000;
+    private int precision,altitud;
 
+    private long ultimoTimeGPS;
+
+
+    private boolean fix=false;
+
+    //public Boolean primerpaso = true;
+    private ComprobarFIX comprobarFixGPS= new ComprobarFIX();
+
+    private Location mLocation=null;
 
     public MiGPS(Context context) {
         mContext = context;
@@ -32,17 +46,20 @@ public class MiGPS extends CalcularGrid implements LocationListener {
         MainActivity mainActivity = (MainActivity) this.mContext;
 
         TextView tvMensajes = mainActivity.findViewById(R.id.tvMensajes);
-        tvMensajes.setText(R.string.buscando_GPS);
 
-        //startLocationUpdates(); Lo quito porque se carga en el onResume.
+        tvMensajes.setText(R.string.buscando_GPS);
+        mCountDownTimer.start();
+
+
     }
 
     public void startLocationUpdates() {
 
-        primerpaso = false;
+        //primerpaso = false;
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         }
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
+
     }
 
 
@@ -52,36 +69,49 @@ public class MiGPS extends CalcularGrid implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
+        mLocation=location;
+
 
         latitudGPS = location.getLatitude();
         longitudGPS = location.getLongitude();
 
         MainActivity mainActivity = (MainActivity) mContext;
         TextView tvMensajes = mainActivity.findViewById(R.id.tvMensajes);
-        TextView tvVerMapaGrid = mainActivity.findViewById(R.id.tvVerMapaGrid);
-        TextView tvVerMapaCoordenadas = mainActivity.findViewById(R.id.tvVerMapaCordenadas);
+
+
+        Log.d("PEPEPE", "onLocationChanged: ");
+
+
+        comprobarFixGPS.setmLocation(location);
 
 
         if (location.hasAccuracy()) {
-           // Toast.makeText(mainActivity, "GPS fijado", Toast.LENGTH_SHORT).show();
+            fix=true;
         } else {
-            //Toast.makeText(mainActivity, "GPS no fijado", Toast.LENGTH_SHORT).show();
+            fix=false;
         }
 
         precision = (int) location.getAccuracy();
+        altitud=(int) location.getAltitude();
 
-        long timeSinceLastUpdate = System.currentTimeMillis() - location.getTime();
+        long timeSinceLastUpdate = location.getTime()-ultimoTimeGPS;
 
         if (timeSinceLastUpdate > 4000) {
             // Ha pasado mucho tiempo desde la última actualización,
             // lo que podría indicar una pérdida de señal
             // o que el GPS no está proporcionando actualizaciones con la frecuencia esperada
             Toast.makeText(mainActivity, "Exceso de tiempo sin señal", Toast.LENGTH_SHORT).show();
+        }else{
+            //Log.d("PEPE", "TIME correcto: "+ultimoTimeGPS+" - "+location.getTime()+"= "+timeSinceLastUpdate);
         }
 
 
+        //ultimoTimeGPS=location.getTime();
 
-        if (precision < precision_minima) {
+
+
+
+        if (precision <= precision_minima) {
             //Si la precisón es buena, actualizo los campos de la pantalla.
             rellenarCampos(mainActivity);
 
@@ -127,8 +157,8 @@ public class MiGPS extends CalcularGrid implements LocationListener {
         return latitudGrid;
     }
 
-    public String getmGridLocator() {
-        return mGridLocator;
+    public String getGridLocator() {
+        return gridLocator;
     }
 
     private void abrirURL(String url) {
@@ -137,6 +167,7 @@ public class MiGPS extends CalcularGrid implements LocationListener {
         intent.setData(Uri.parse(url));
         mainActivity.startActivity(intent);
     }
+
 
     private void ponerAcerosLosCampos(MainActivity mainActivity ){
 
@@ -147,6 +178,8 @@ public class MiGPS extends CalcularGrid implements LocationListener {
         TextView tvLatitudGrid = mainActivity.findViewById(R.id.tvLatitudGrid);
         TextView tvLongitudGrid = mainActivity.findViewById(R.id.tvLongitudGrid);
         TextView tvPrecision = mainActivity.findViewById(R.id.tvPrecision);
+        TextView tvAltitud = mainActivity.findViewById(R.id.tvAltitud);
+        TextView tvFix = mainActivity.findViewById(R.id.tvFix);
         tvMensajes.setText(R.string.precision_mala);
         tvLatitudGPS.setText("00.000000");
         tvLongitudGPS.setText("00.000000");
@@ -154,6 +187,8 @@ public class MiGPS extends CalcularGrid implements LocationListener {
         tvLatitudGrid.setText("00.000000");
         tvLongitudGrid.setText("00.000000");
         tvPrecision.setText("000");
+        tvAltitud.setText(("--- m"));
+        tvFix.setText("No Fix");
     }
 
     private void rellenarCampos(MainActivity mainActivity){
@@ -165,20 +200,81 @@ public class MiGPS extends CalcularGrid implements LocationListener {
         TextView tvLatitudGrid = mainActivity.findViewById(R.id.tvLatitudGrid);
         TextView tvLongitudGrid = mainActivity.findViewById(R.id.tvLongitudGrid);
         TextView tvPrecision = mainActivity.findViewById(R.id.tvPrecision);
+        TextView tvAltitud = mainActivity.findViewById(R.id.tvAltitud);
+        TextView tvFix =mainActivity.findViewById(R.id.tvFix);
+
+        if (fix){
+            tvFix.setText("Si FiX");
+        }else{
+            tvFix.setText("No Fix");
+
+        }
 
         tvLatitudGPS.setText(Double.toString(latitudGPS));
         tvLatitudGPS.setText(String.format("%.6f", latitudGPS).replace(',', '.'));
         tvLongitudGPS.setText(String.format("%.6f", longitudGPS).replace(',', '.'));
         tvPrecision.setText(Integer.toString(precision));
+        tvAltitud.setText(Integer.toString(altitud)+" m");
         tvMensajes.setText(R.string.datos_gps_correctos);
 
-        mGridLocator = CalcularGrid.grid(latitudGPS, longitudGPS);
-        tvGridLocator.setText(mGridLocator);
+        gridLocator = CalcularGrid.grid(latitudGPS, longitudGPS);
+        tvGridLocator.setText(gridLocator);
 
-        latitudGrid = CalcularCoordenadasDesdeGrid.latitud(mGridLocator);
-        longitudGrid = CalcularCoordenadasDesdeGrid.longitud(mGridLocator);
+        latitudGrid = CalcularCoordenadasDesdeGrid.latitud(gridLocator);
+        longitudGrid = CalcularCoordenadasDesdeGrid.longitud(gridLocator);
 
         tvLatitudGrid.setText(String.format("%.6f", latitudGrid).replace(',', '.'));
         tvLongitudGrid.setText(String.format("%.6f", longitudGrid).replace(',', '.'));
     }
+
+    private void iconoGPS (MainActivity mm,boolean activar){
+        TextView tv=mm.findViewById(R.id.tvGPS);
+        if (activar){
+            tv.setText("GPS");
+        }else {
+            tv.setText("");
+        }
+    }
+
+    private CountDownTimer mCountDownTimer = new CountDownTimer(Long.MAX_VALUE, 1000) {
+        int intentos=0;
+        @Override
+        public void onTick(long millisUntilFinished) {
+            if (mLocation!=null) {
+                long tiempoLocation = mLocation.getTime();
+                Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                long utcTime = calendar.getTimeInMillis();
+                long tiempoUltimoGPS = ultimoTimeGPS - tiempoLocation;
+                if (ultimoTimeGPS != 0) {
+                    if ((Math.abs(tiempoUltimoGPS)) < 4000) {
+
+                        // mCountDownTimer.cancel();
+                        fix = true;
+                        intentos++;
+                    } else {
+                        fix = false;
+                        intentos--;
+                    }
+                }
+                Log.d("PEPEPE", "actual: " + tiempoLocation + " - " + ultimoTimeGPS + " - " + Math.abs(tiempoUltimoGPS) + " " + fix);
+                if (intentos>=4){
+                    intentos=4;
+                    Log.d("PEPEPE", "encender icono gps");
+                }
+                if (intentos<=0 && fix) {
+                    intentos=0;
+                    Log.d("PEPEPE", "apagar icono gps");
+                }
+                iconoGPS((MainActivity) mContext,fix);
+                ultimoTimeGPS = utcTime;
+            }
+        }
+
+        @Override
+        public void onFinish() {
+
+        }
+
+    };
+
 }
