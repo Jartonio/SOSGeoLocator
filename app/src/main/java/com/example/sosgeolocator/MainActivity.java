@@ -91,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         TextView tvMensajes = findViewById(R.id.tvMensajes);
 
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             permisoGPS = true;
         } else {
@@ -125,7 +124,6 @@ public class MainActivity extends AppCompatActivity {
         intent.setData(Uri.parse(url));
         this.startActivity(intent);
     }
-
 }
 
 
