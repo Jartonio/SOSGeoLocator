@@ -9,7 +9,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
@@ -22,7 +21,7 @@ public class MiGPS extends CalcularGrid implements LocationListener {
     private String mGridLocator = "";
     private final int precision_minima = 100;
     private int precision;
-    public Boolean primerpaso = true;
+    public Boolean primerPaso = true;
 
 
     public MiGPS(Context context) {
@@ -39,7 +38,7 @@ public class MiGPS extends CalcularGrid implements LocationListener {
 
     public void startLocationUpdates() {
 
-        primerpaso = false;
+        primerPaso = false;
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         }
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);

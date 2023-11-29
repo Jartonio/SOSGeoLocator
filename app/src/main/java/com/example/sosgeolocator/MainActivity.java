@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     private MiGPS miGPS;
     private boolean permisoGPS = false;
-    public boolean primerpaso = true;
+    public boolean primerPaso = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +32,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         miGPS = new MiGPS(this);
-        Log.d("pepe", "oncreate");
 
-
-        //Creo un listener en el GridLocator para copirlo al portapapeles.
+        //Creo un listener en el GridLocator para copiarlo al portapapeles.
         TextView tvGripLocator = findViewById(R.id.tvGridLocator);
         tvGripLocator.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Creo un listener para abrir un mapa con las coordenadas obtenidas-
         TextView tvVerMapaCoordenadas=findViewById(R.id.tvVerMapaCordenadas);
         tvVerMapaCoordenadas.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
                 abrirURL("https://www.openstreetmap.org/?mlat=" + miGPS.getLatitudGrid() + "&mlon=" + miGPS.getLongitudGrid());
             }
         });
+
+        //Creo un listener para abrir en un mapa el GridLocator obtenido.
         TextView tvVerMapaGrid=findViewById(R.id.tvVerMapaGrid);
         tvVerMapaGrid.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -94,10 +96,10 @@ public class MainActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             permisoGPS = true;
         } else {
-            if (primerpaso) {
+            if (primerPaso) {
                 ActivityCompat.requestPermissions((Activity) this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
                 countDownTimer.start();
-                primerpaso = false;
+                primerPaso = false;
                 tvMensajes.setText(R.string.se_necesitan_permisos);
             }
         }
@@ -119,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("pepe", "pausado");
 
 */
+    //Este metodo abre el map conlas coordenadas o con el GridLocator.
     private void abrirURL(String url) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
