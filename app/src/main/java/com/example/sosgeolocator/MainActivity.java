@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     /*
     si activo esto no vuelve de ver los mapas de internet, pero lanza siempre el patrocinador
 
